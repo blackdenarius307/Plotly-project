@@ -16,6 +16,13 @@ const Metadata = d3.json(JSON).then(function(data) {
   console.log(data.metadata);
 });
 
+//Parse the JSON and get the Sample data
+const Samples = d3.json(JSON).then(function(data) {
+  console.log(data.samples);
+});
+
+
+
 // d3.select("selDataset")
 //   .selectAll()
 //   .data(Names)
@@ -24,3 +31,28 @@ const Metadata = d3.json(JSON).then(function(data) {
 //   .html(function(d) {
 //     return `<option value ="${d.names}">${d.names}</option>`;
 //   });
+
+//Display an initial plot
+function init() {
+  //Choose initial ID for base data
+  var initial = 940;
+// Create the labels
+  var labels = Object.keys(Samples.otu_ids === initial);
+  console.log(labels);
+//Choose initial dataset
+  var dataset = Object.values(Samples.sample_values === initial);
+  console.log(dataset);
+//Create the plot data
+  var data = [{
+    values: dataset,
+    labels: labels,
+    type: "bar"
+  }];
+  var layout = {
+    height: 600,
+    width:800
+  };
+  Plotly.newPLot("bar", data, layout);
+}
+
+init();
