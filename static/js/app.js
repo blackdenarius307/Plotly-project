@@ -49,79 +49,48 @@ const optionChanged = () => {
     });
     //Gather Sample Data
     let sampleData = data.samples;
+    //Filter down to your inputvalue
     let filteredSampleData = sampleData.filter(sampleData => sampleData.id == inputValue);
+    //Slice the ID's to top 10
     let slicedSampleNames = filteredSampleData[0].otu_ids.slice(0,10);
+    //Make a string with OTU on the front so Plotly doesn't have a stroke with your graph
     let stringSampleNames = slicedSampleNames.map(sample => `OTU ${sample}`);
-    console.log(stringSampleNames);
+    //Slice the Sample Values down to size
     let slicedSampleValues = filteredSampleData[0].sample_values.slice(0,10);
-    // // //Order values
-    // // let orderedSampleValues = filteredSampleData.map(object => object.sample_values)//.sort((a,b) => a-b);
-    // // Slice down to size
-    // let slicedSampleValues = orderedSampleValues.map(object => object.slice(0,10));
-    // //Grab Sample names
-    // let filteredSampleNames = filteredSampleData.map(object => object.otu_ids);
-    // //Slice down to size
-    // let slicedSampleNames = filteredSampleNames.map(object => object.slice(0,10));
-    // console.log(slicedSampleNames);
-    // console.log(slicedSampleValues);
-
+    
+    //Create Bar Trace Information
     let trace1 =  {
       type: "bar",
       x: slicedSampleValues,
       y: stringSampleNames,
       orientation: "h"
     };
-    let graphData = [trace1];
-    let layout = {
+    let barData = [trace1];
+    let barLayout = {
       title: "Top 10 Bacteria Found",
       yaxis: {
         tickmode:"array",
         tickvals: slicedSampleNames
         }
       };
-    
-    Plotly.newPlot("bar", graphData, layout);
+      //Create Bubble Graph information
+      let trace2 = {
+      x: slicedSampleNames,
+      y: slicedSampleValues,
+      text: stringSampleNames,
+      mode: "markers",
+      marker: {
+        size: slicedSampleValues,
+        color: slicedSampleNames
+        }
+    };
+    let pieData = [trace2];
+    let pieLayout = {
+      title: "Top 10 Bacteria Found"
+    };
+    //Make the Plots happen.
+    Plotly.newPlot("bar", barData, barLayout);
+    Plotly.newPlot("bubble", pieData, pieLayout);
   });
 }
-
-  
-  
-  
-  // //Create the Bar chart
-  // d3.json("samples.json").then(readData => {
-  //   let data = readData
-  //   let sampleData = data.samples;
-  //   //Filter Sample Data
-  //   let filteredSampleData = sampleData.filter(sampleData => sampleData.id == inputValue);
-  //   console.log(filteredSampleData);
-  //   let Values = filteredSampleData.otu_ids;
-  //   console.log(Values)
-
-  
-    //Slice down the data
-    // let values = filteredSampleData.sample_values;
-    // console.log(values);
-//   });
-// }
-
-// const metaData = () => {
-//     //Try and input the Metadata
-//     d3.json("samples.json").then(readData => {
-//       let data = readData;
-//       //Grab Metadata
-//       let metadata = data.metadata;
-//       console.log(metadata);
-//       //Filter it down
-//       let filteredMetadata = metadata.filter(metadata => metadata.id == inputValue);
-//       console.log(filteredMetadata);
-//       //Append a UL with the metadata
-//       filteredMetadata.forEach(data => {
-//         demoBox.append("li").text(`Age: ${data.age}`);
-//         demoBox.append("li").text(`bbtype: ${data.bbtype}`);
-//         demoBox.append("li").text(`Ethnicity: ${data.ethnicity}`);
-//         demoBox.append("li").text(`Gender: ${data.gender}`);
-//         demoBox.append("li").text(`location: ${data.location}`);
-//       });
-//     });
-// }
 init();
